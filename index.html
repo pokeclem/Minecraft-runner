@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Runner</title>
+<style>
+body {
+  margin: 0;
+  background: #4caf50;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+#game {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(#87ceeb, #4caf50);
+  position: relative;
+}
+.player {
+  width: 40px;
+  height: 40px;
+  background: #2e7d32;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.obstacle {
+  width: 40px;
+  height: 40px;
+  background: red;
+  position: absolute;
+  top: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="game">
+  <div class="player" id="player"></div>
+</div>
+
+<script>
+const player = document.getElementById("player");
+let jumping = false;
+
+function jump() {
+  if (jumping) return;
+  jumping = true;
+  player.style.bottom = "120px";
+  setTimeout(() => {
+    player.style.bottom = "20px";
+    jumping = false;
+  }, 500);
+}
+
+document.addEventListener("touchstart", jump);
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") jump();
+});
+
+function spawnObstacle() {
+  const obs = document.createElement("div");
+  obs.className = "obstacle";
+  obs.style.left = Math.random() * (window.innerWidth - 40) + "px";
+  document.getElementById("game").appendChild(obs);
+
+  let y = 0;
+  const interval = setInterval(() => {
+    y += 5;
+    obs.style.top = y + "px";
+    if (y > window.innerHeight) {
+      obs.remove();
+      clearInterval(interval);
+    }
+  }, 20);
+}
+
+setInterval(spawnObstacle, 1500);
+</script>
+
+</body>
+</html>
